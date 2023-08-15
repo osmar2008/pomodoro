@@ -2,7 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+.Tabs {
+  width: 80%;
+  height: auto;
+  color: #e8f0f2;
+  margin-bottom: 1em;
+}
+
+ul.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+ul.nav li {
+  padding: 1rem;
+  list-style: none;
+  text-align: center;
+  cursor: pointer;
+  /* transition: all 0.7s;
+  border-bottom-left-radius: 2rem;
+  border-top-left-radius: 2rem; */
+}
+
+/* ul.nav li:nth-child(2) {
+  border-radius: 0;
+  border-bottom-right-radius: 2rem;
+  border-top-right-radius: 2rem;
+} */
+
+ul.nav li:hover {
+  background: rgba(4, 16, 14, 0.15);
+  border-radius: 5px;
+}
+
+ul.nav li.active {
+  background: #39a2db;
+  border-radius: 5px;
+}
+
+input[type="checkbox"]:checked ~ label {
+  text-decoration: line-through;
+}
+
+/* :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
@@ -24,4 +67,4 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-}
+} */
