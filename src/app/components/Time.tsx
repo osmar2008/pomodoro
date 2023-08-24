@@ -1,17 +1,19 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
 import { useState, useEffect } from "react";
 
-interface OutletProps {
+interface TimeProps {
   value: number;
 }
 
-const Outlet: React.FC<OutletProps> = ({ value }) => {
+const Time: React.FC<TimeProps> = ({ value }) => {
   const [isActive, setIsActive] = useState(false);
   const [time, setTime] = useState<number>(value);
 
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
+
+  const alarmRef = useRef<HTMLAudioElement>(null);
 
   useEffect(() => {
     let timer: any;
@@ -19,6 +21,9 @@ const Outlet: React.FC<OutletProps> = ({ value }) => {
       timer = setTimeout(() => {
         setTime((prevTime) => prevTime - 1);
       }, 1000);
+    }
+    if (time === 0) {
+      alarmRef.current?.play();
     }
     return () => {
       clearTimeout(timer);
@@ -33,7 +38,7 @@ const Outlet: React.FC<OutletProps> = ({ value }) => {
 
   const handleReset = () => {
     setIsActive(false);
-    setTime(25 * 60);
+    setTime(value);
   };
 
   return (
@@ -60,9 +65,10 @@ const Outlet: React.FC<OutletProps> = ({ value }) => {
         <button className="p-1 text-white" onClick={() => handleReset()}>
           Reset
         </button>
+        <audio ref={alarmRef} src={"/top_alarm.mp3"} />
       </div>
     </>
   );
 };
 
-export default Outlet;
+export default Time;

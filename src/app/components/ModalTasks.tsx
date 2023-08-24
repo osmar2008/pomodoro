@@ -1,10 +1,18 @@
-import { addTask, selectTasks } from "@/redux/features/TasksSlice";
+import {
+  addTask,
+  deleteTask,
+  selectTaskById,
+  selectTasks,
+  updateTask,
+} from "@/redux/features/TasksSlice";
 import { AppDispatch, useAppSelector } from "@/redux/store";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import TaskType from "../types/TaskType";
+import SaveAltIcon from "@mui/icons-material/SaveAlt";
 
 interface ModalTasksProps {
   onClose: () => void;
@@ -12,8 +20,19 @@ interface ModalTasksProps {
 
 const ModalTasks: React.FC<ModalTasksProps> = ({ onClose }) => {
   const [name, setName] = useState<string>("");
+  const [taskIsEditing, setTaskIsEditing] = useState<number>(0);
+  const [newName, setNewName] = useState<string>("");
   const dispatch = useDispatch<AppDispatch>();
   const tasksRedux = useAppSelector(selectTasks);
+  const taskId = useAppSelector((state) =>
+    selectTaskById(state, taskIsEditing)
+  );
+
+  useEffect(() => {
+    if (taskIsEditing !== 0) {
+      setNewName(taskId?.name as string);
+    }
+  }, [taskId, taskIsEditing]);
 
   const handleAddTask = (name: string) => {
     if (name === "") {
@@ -26,6 +45,20 @@ const ModalTasks: React.FC<ModalTasksProps> = ({ onClose }) => {
 
   const handleClear = () => {
     setName("");
+  };
+
+  const handleDelete = (id: number) => {
+    dispatch(deleteTask(id));
+  };
+
+  const handleEdit = (task: TaskType) => {
+    dispatch(
+      updateTask({
+        id: task.uid,
+        changes: { name: task.name },
+      })
+    );
+    setTaskIsEditing(0);
   };
 
   return (
@@ -49,15 +82,35 @@ const ModalTasks: React.FC<ModalTasksProps> = ({ onClose }) => {
         {tasksRedux.map((task) => {
           return (
             <div key={task.uid} className="my-4 flex">
-              <input type="checkbox" className="me-4 w-6" />
-              <label className="w-full break-words overflow-hidden me-4">
-                {task.name}
-              </label>
+              {task.uid === taskIsEditing ? (
+                <>
+                  <input
+                    className="w-full break-words overflow-hidden me-4"
+                    type="text"
+                    value={newName}
+                    onChange={(ev) => setNewName(ev.target.value)}
+                  />
+                  <button
+                    className="mx-3"
+                    onClick={() => handleEdit({ uid: task.uid, name: newName })}
+                  >
+                    <SaveAltIcon />
+                  </button>
+                </>
+              ) : (
+                <>
+                  <input type="checkbox" className="me-4 w-6" />
+                  <label className="w-full break-words overflow-hidden me-4">
+                    {task.name}
+                  </label>
+                </>
+              )}
+
               <div className="flex">
-                <button>
+                <button onClick={() => setTaskIsEditing(task.uid)}>
                   <EditIcon />
                 </button>
-                <button className="mx-3">
+                <button onClick={() => handleDelete(task.uid)} className="mx-3">
                   <DeleteIcon />
                 </button>
               </div>

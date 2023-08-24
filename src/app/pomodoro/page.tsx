@@ -13,7 +13,6 @@ interface PomodoroProps {
 
 const Pomodoro: React.FC<PomodoroProps> = ({ uid }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const taskId = useAppSelector((state) => selectTaskById(state, uid));
 
   return (
     <main className="bg-blue-400 flex justify-center items-center min-h-screen flex-col">
@@ -26,7 +25,9 @@ const Pomodoro: React.FC<PomodoroProps> = ({ uid }) => {
       >
         Tarefas
       </button>
-      <p>{taskId?.name}</p>
+      <audio src="/top_alarm.mp3" className="h-1/2 w-10">
+        Tocar
+      </audio>
 
       {showModal &&
         createPortal(

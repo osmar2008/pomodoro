@@ -1,5 +1,5 @@
 interface TaskType {
-  uid: string;
+  uid: number;
   name: string;
 }
 

@@ -1,10 +1,10 @@
 import React from "react";
-import Outlet from "../Outlet";
+import Time from "../Time";
 
 const FirstTab = () => {
   return (
     <div className="FirstTab">
-      <Outlet value={25 * 60} />
+      <Time value={25 * 60} />
     </div>
   );
 };
