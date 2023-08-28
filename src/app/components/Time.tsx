@@ -9,6 +9,7 @@ interface TimeProps {
 const Time: React.FC<TimeProps> = ({ value }) => {
   const [isActive, setIsActive] = useState(false);
   const [time, setTime] = useState<number>(value);
+  const [buttonStop, setButtonStop] = useState<boolean>(false);
 
   const minutes = Math.floor(time / 60);
   const seconds = time % 60;
@@ -24,6 +25,7 @@ const Time: React.FC<TimeProps> = ({ value }) => {
     }
     if (time === 0) {
       alarmRef.current?.play();
+      setButtonStop(true);
     }
     return () => {
       clearTimeout(timer);
@@ -41,6 +43,11 @@ const Time: React.FC<TimeProps> = ({ value }) => {
     setTime(value);
   };
 
+  const handleStop = () => {
+    alarmRef.current?.pause();
+    setButtonStop(false);
+  };
+
   return (
     <>
       <div className="flex pt-4">
@@ -51,6 +58,11 @@ const Time: React.FC<TimeProps> = ({ value }) => {
         <h1 className="text-white text-8xl">
           {seconds.toString().padStart(2, "0")}
         </h1>
+        {buttonStop && (
+          <div className="flex items-center ms-4">
+            <button onClick={handleStop}>STOP</button>
+          </div>
+        )}
       </div>
       <div className="flex justify-center pt-4">
         <button

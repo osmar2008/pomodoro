@@ -4,7 +4,7 @@ import Time from "../Time";
 const SecondTab = () => {
   return (
     <div className="SecondTab">
-      <Time value={5 * 60} />
+      <Time value={10} />
     </div>
   );
 };

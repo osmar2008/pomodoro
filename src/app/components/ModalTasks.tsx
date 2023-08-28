@@ -6,13 +6,14 @@ import {
   updateTask,
 } from "@/redux/features/TasksSlice";
 import { AppDispatch, useAppSelector } from "@/redux/store";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TaskType from "../types/TaskType";
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import { CSSTransition } from "react-transition-group";
 
 interface ModalTasksProps {
   onClose: () => void;
@@ -22,6 +23,9 @@ const ModalTasks: React.FC<ModalTasksProps> = ({ onClose }) => {
   const [name, setName] = useState<string>("");
   const [taskIsEditing, setTaskIsEditing] = useState<number>(0);
   const [newName, setNewName] = useState<string>("");
+  const [showInput, setShowInput] = useState<boolean>(true);
+  const [isChecked, setIsChecked] = useState<boolean>(true);
+  const nodeRef = useRef(null);
   const dispatch = useDispatch<AppDispatch>();
   const tasksRedux = useAppSelector(selectTasks);
   const taskId = useAppSelector((state) =>
@@ -99,13 +103,31 @@ const ModalTasks: React.FC<ModalTasksProps> = ({ onClose }) => {
                 </>
               ) : (
                 <>
-                  <input type="checkbox" className="me-4 w-6" />
-                  <label className="w-full break-words overflow-hidden me-4">
-                    {task.name}
-                  </label>
+                  {isChecked && (
+                    <input
+                      type="checkbox"
+                      onChange={() => setShowInput(true)}
+                      className="me-4 w-6"
+                    />
+                  )}
+                  <CSSTransition
+                    in={isChecked}
+                    nodeRef={nodeRef}
+                    timeout={300}
+                    classNames="fade"
+                    unmountOnExit
+                    onEnter={() => setShowInput(false)}
+                    onExited={() => setShowInput(true)}
+                  >
+                    <label
+                      ref={nodeRef}
+                      className="w-full break-words overflow-hidden me-4"
+                    >
+                      {task.name}
+                    </label>
+                  </CSSTransition>
                 </>
               )}
-
               <div className="flex">
                 <button onClick={() => setTaskIsEditing(task.uid)}>
                   <EditIcon />
