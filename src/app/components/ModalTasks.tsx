@@ -24,7 +24,7 @@ const ModalTasks: React.FC<ModalTasksProps> = ({ onClose }) => {
   const [taskIsEditing, setTaskIsEditing] = useState<number>(0);
   const [newName, setNewName] = useState<string>("");
   const [showInput, setShowInput] = useState<boolean>(true);
-  const [isChecked, setIsChecked] = useState<boolean>(true);
+  const [isChecked, setIsChecked] = useState<number>(0);
   const nodeRef = useRef(null);
   const dispatch = useDispatch<AppDispatch>();
   const tasksRedux = useAppSelector(selectTasks);
@@ -68,7 +68,7 @@ const ModalTasks: React.FC<ModalTasksProps> = ({ onClose }) => {
   return (
     <div className="flex overflow-auto absolute flex-col shadow-2xl bg-white bottom-14 top-14 min-h-4/5 w-1/4 rounded-2xl">
       <div className="py-2 flex justify-center bg-blue-200">
-        <button className="flex items-center ms-2me-8" onClick={onClose}>
+        <button className="flex items-center mx-2" onClick={onClose}>
           <CloseIcon />
         </button>
         <input
@@ -103,31 +103,35 @@ const ModalTasks: React.FC<ModalTasksProps> = ({ onClose }) => {
                 </>
               ) : (
                 <>
-                  {isChecked && (
-                    <input
-                      type="checkbox"
-                      onChange={() => setShowInput(true)}
-                      className="me-4 w-6"
-                    />
-                  )}
-                  <CSSTransition
-                    in={isChecked}
-                    nodeRef={nodeRef}
-                    timeout={300}
-                    classNames="fade"
-                    unmountOnExit
-                    onEnter={() => setShowInput(false)}
-                    onExited={() => setShowInput(true)}
-                  >
-                    <label
-                      ref={nodeRef}
-                      className="w-full break-words overflow-hidden me-4"
-                    >
+                  <input
+                    type="checkbox"
+                    onChange={() =>
+                      setIsChecked(isChecked === task.uid ? 0 : task.uid)
+                    }
+                    className="me-4 w-6"
+                  />
+                  {isChecked !== task.uid && (
+                    <label ref={nodeRef} className="w-2/3 break-words me-4">
                       {task.name}
                     </label>
+                  )}
+                  <CSSTransition
+                    in={isChecked === task.uid}
+                    nodeRef={nodeRef}
+                    timeout={500}
+                    classNames="fade"
+                    unmountOnExit
+                    onEntered={() => handleDelete(task.uid)}
+                  >
+                    <>
+                      <label ref={nodeRef} className="w-2/3 break-words me-4">
+                        {task.name}
+                      </label>
+                    </>
                   </CSSTransition>
                 </>
               )}
+
               <div className="flex">
                 <button onClick={() => setTaskIsEditing(task.uid)}>
                   <EditIcon />
@@ -143,5 +147,4 @@ const ModalTasks: React.FC<ModalTasksProps> = ({ onClose }) => {
     </div>
   );
 };
-
 export default ModalTasks;

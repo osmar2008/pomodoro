@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import Input from "./components/Input";
+import Input from "../components/Input";
 import Link from "next/link";
-import Register from "./register/page";
+import Register from "../register/page";
 
 const Login: React.FC = () => {
   return (

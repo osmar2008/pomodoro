@@ -15,8 +15,8 @@ const Pomodoro: React.FC<PomodoroProps> = ({ uid }) => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   return (
-    <main className="bg-blue-400 flex justify-center items-center min-h-screen flex-col">
-      <div className="bg-blue-300 py-6 w-1/3 h-1/3 flex justify-center items-center flex-col rounded-lg">
+    <main className="bg-blue-500 flex justify-center items-center min-h-screen flex-col">
+      <div className="bg-blue-400 py-6 w-1/3 h-1/3 flex justify-center items-center flex-col rounded-lg">
         <Tabs />
       </div>
       <button
