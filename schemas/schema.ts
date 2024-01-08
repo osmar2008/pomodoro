@@ -1,4 +1,4 @@
-import { users } from "./user.js";
-import { tasks } from "./task.js";
+import { users } from "./user";
+import { tasks } from "./task";
 
 export { users, tasks };

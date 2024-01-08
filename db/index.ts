@@ -9,6 +9,3 @@ export const client = new pg.Client({
   password: "pomodoro",
   database: "pomodoro",
 });
-
-await client.connect();
-const db = drizzle(client);
